@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园十大优秀青年评比系统 - 数据结构课程设计</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: #dbeafe;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* 顶部导航 */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 4px;
+        }
+
+        .nav-btn {
+            padding: 8px 14px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .nav-btn.active {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            padding: 8px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        /* 主内容区 */
+        .main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        /* Hero 区域 */
+        .hero {
+            text-align: center;
+            padding: 40px 0 60px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 {
+            font-size: 40px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--text), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+            -webkit-text-fill-color: var(--primary);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .hero-tags {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .hero-tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .hero-tag .icon {
+            color: var(--primary);
+        }
+
+        /* 卡片 */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-title .icon {
+            color: var(--primary);
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* 表单 */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* 结果提示 */
+        .result-box {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .result-error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .result-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .result-success .result-title {
+            color: var(--success);
+        }
+
+        .result-error .result-title {
+            color: var(--danger);
+        }
+
+        .result-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        /* 学生信息详情 */
+        .student-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .info-item .icon {
+            color: var(--primary);
+        }
+
+        .deed-item {
+            grid-column: span 2;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .deed-item .icon {
+            color: var(--primary);
+            margin-top: 2px;
+        }
+
+        /* 表格 */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            background: var(--bg);
+            font-weight: 500;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        tr:hover {
+            background: var(--bg);
+        }
+
+        .vote-count {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* ASL 统计 */
+        .asl-box {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .asl-value {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .asl-label {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* 哈希表可视化 */
+        .hash-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .hash-cell {
+            padding: 12px 8px;
+            border-radius: 8px;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .hash-cell.filled {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .hash-cell.empty {
+            background: var(--bg);
+            border: 1px dashed var(--border);
+        }
+
+        .hash-addr {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .hash-name {
+            font-size: 13px;
+            font-weight: 500;
+            word-break: break-all;
+        }
+
+        .hash-major {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .hash-vote {
+            font-size: 11px;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+
+        .hash-empty-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        /* 排行榜 */
+        .leaderboard {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rank-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .rank-item:hover {
+            transform: translateX(4px);
+        }
+
+        .rank-item.rank-1 {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(245, 158, 11, 0.02));
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .rank-item.rank-2 {
+            background: linear-gradient(135deg, rgba(148, 163, 184, 0.05), rgba(148, 163, 184, 0.02));
+            border-color: rgba(148, 163, 184, 0.3);
+        }
+
+        .rank-item.rank-3 {
+            background: linear-gradient(135deg, rgba(180, 83, 9, 0.05), rgba(180, 83, 9, 0.02));
+            border-color: rgba(180, 83, 9, 0.2);
+        }
+
+        .rank-badge {
+            width: 40px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .rank-medal {
+            font-size: 28px;
+        }
+
+        .rank-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin: 0 auto;
+        }
+
+        .rank-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .rank-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .rank-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .rank-deed {
+            font-size: 12px;
+            color: var(--text-muted);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .rank-votes {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .rank-vote-num {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .rank-vote-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .crown-icon {
+            color: var(--warning);
+            margin-left: 4px;
+        }
+
+        /* 确认对话框 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: scaleIn 0.2s;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-title .icon {
+            color: var(--danger);
+        }
+
+        .modal-desc {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg);
+        }
+
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 30px 24px;
+            color: var(--text-muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        .footer p {
+            margin-bottom: 4px;
+        }
+
+        /* Toast 提示 */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 24px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            padding: 12px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid;
+            animation: toastIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--danger);
+        }
+
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--danger);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav.open {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 64px;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 10px;
+                border-bottom: 1px solid var(--border);
+                gap: 2px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .hash-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .student-info {
+                grid-template-columns: 1fr;
+            }
+
+            .deed-item {
+                grid-column: span 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hash-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .main {
+                padding: 20px 16px;
+            }
+
+            .card-body {
+                padding: 16px;
+            }
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.3;
+        }
+
+        /* section 动画 */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 专业标签样式 */
+        .major-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #f0f9ff;
+            color: #0369a1;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast 容器 -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- 顶部导航 -->
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo">
+                <div class="logo-icon">🏆</div>
+                <span>校园十大优秀青年评比</span>
+            </div>
+            <nav class="nav" id="nav">
+                <button class="nav-btn active" data-section="vote">
+                    <span>🗳️</span> 提名投票
+                </button>
+                <button class="nav-btn" data-section="query">
+                    <span>🔍</span> 信息查询
+                </button>
+                <button class="nav-btn" data-section="table">
+                    <span>📊</span> 票数总览
+                </button>
+                <button class="nav-btn" data-section="leaderboard">
+                    <span>🏅</span> 排行榜
+                </button>
+                <button class="nav-btn" data-section="reset">
+                    <span>🔄</span> 系统重置
+                </button>
+            </nav>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        </div>
+    </header>
+
+    <!-- 主内容 -->
+    <main class="main">
+        <!-- Hero 区域 -->
+        <div class="hero">
+            <div class="hero-badge">
+                <span>🎓</span> 数据结构课程设计项目
+            </div>
+            <h1>校园十大<span>优秀青年</span>评比</h1>
+            <p>基于哈希表与二叉排序树数据结构，实现学生提名、投票、查询与排行榜功能。每一位在校学生都可以为自己认为优秀的同学投出宝贵的一票！</p>
+            <div class="hero-tags">
+                <div class="hero-tag">
+                    <span class="icon">📋</span>
+                    哈希表存储 · 除留余数法
+                </div>
+                <div class="hero-tag">
+                    <span class="icon">⭐</span>
+                    二叉排序树 · 排行榜
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能一：提名投票 -->
+        <section class="section active" id="section-vote">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="icon">🗳️</span>
+                        功能一：提名优秀学生和投票
+                    </h2>
+                    <p class="card-desc">输入学生姓名、专业和年级为其提名或投票。已提名学生将自动累加票数。</p>
+                </div>
+                <div class="card-body">
+                    <form id="voteForm">
+                        <div class="form-group">
+                            <label class="form-label" for="voteName">学生姓名</label>
+                            <input type="text" id="voteName" class="form-input" placeholder="请输入学生姓名" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="voteMajor">专业</label>
+                            <select id="voteMajor" class="form-select" required>
+                                <option value="">请选择专业</option>
+                                <option value="软件工程">软件工程</option>
+                                <option value="计算机科学与技术">计算机科学与技术</option>
+                                <option value="数据科学与大数据技术">数据科学与大数据技术</option>
+                                <option value="人工智能">人工智能</option>
+                                <option value="网络工程">网络工程</option>
+                                <option value="数字媒体技术">数字媒体技术</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="voteGrade">年级</label>
+                            <select id="voteGrade" class="form-select" required>
+                                <option value="">请选择年级</option>
+                                <option value="2022级">2022级</option>
+                                <option value="2023级">2023级</option>
+                                <option value="2024级">2024级</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <span>🗳️</span> 提名 / 投票
+                        </button>
+                    </form>
+                    <div id="voteResult"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 功能二：信息查询 -->
+        <section class="section" id="section-query">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="icon">🔍</span>
+                        功能二：查看提名学生基本信息
+                    </h2>
+                    <p class="card-desc">输入学生姓名、专业和年级，查询该同学的提名信息与当前票数。</p>
+                </div>
+                <div class="card-body">
+                    <form id="queryForm">
+                        <div class="form-group">
+                            <label class="form-label" for="queryName">学生姓名</label>
+                            <input type="text" id="queryName" class="form-input" placeholder="请输入学生姓名" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="queryMajor">专业</label>
+                            <select id="queryMajor" class="form-select" required>
+                                <option value="">请选择专业</option>
+                                <option value="软件工程">软件工程</option>
+                                <option value="计算机科学与技术">计算机科学与技术</option>
+                                <option value="数据科学与大数据技术">数据科学与大数据技术</option>
+                                <option value="人工智能">人工智能</option>
+                                <option value="网络工程">网络工程</option>
+                                <option value="数字媒体技术">数字媒体技术</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="queryGrade">年级</label>
+                            <select id="queryGrade" class="form-select" required>
+                                <option value="">请选择年级</option>
+                                <option value="2022级">2022级</option>
+                                <option value="2023级">2023级</option>
+                                <option value="2024级">2024级</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <span>🔍</span> 查询
+                        </button>
+                    </form>
+                    <div id="queryResult"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 功能三：票数总览 -->
+        <section class="section" id="section-table">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="icon">📊</span>
+                        功能三：各提名学生票数总览
+                    </h2>
+                    <p class="card-desc">显示哈希表中所有提名学生的专业、年级、姓名、票数及查找长度。</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th>姓名</th>
+                                    <th>专业</th>
+                                    <th>年级</th>
+                                    <th>票数</th>
+                                    <th>关键字 (k)</th>
+                                    <th>哈希地址</th>
+                                    <th>查找长度 (si)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" style="font-size: 16px;">
+                        <span class="icon">📈</span>
+                        平均查找长度 (ASL)
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="asl-box">
+                        <span class="asl-value" id="aslValue">0</span>
+                        <span class="asl-label">= 总查找长度 / 学生数（<span id="studentCount">0</span>）</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title" style="font-size: 16px;">
+                        <span class="icon">#️⃣</span>
+                        哈希表存储结构可视化
+                    </h2>
+                    <p class="card-desc">表长 20，哈希函数 hash(key)=key%19，冲突时 adr=(adr+key)%19</p>
+                </div>
+                <div class="card-body">
+                    <div class="hash-grid" id="hashGrid">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 功能四：排行榜 -->
+        <section class="section" id="section-leaderboard">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="icon">🏅</span>
+                        功能四：十大优秀青年排行榜
+                    </h2>
+                    <p class="card-desc">基于二叉排序树（BST），按票数从高到低显示前 10 名同学。</p>
+                </div>
+                <div class="card-body">
+                    <div class="leaderboard" id="leaderboard">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 功能五：系统重置 -->
+        <section class="section" id="section-reset">
+            <div class="card" style="max-width: 500px; margin: 0 auto;">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <span class="icon">🔄</span>
+                        功能五：退出系统 / 重置数据
+                    </h2>
+                    <p class="card-desc">清空所有提名与投票数据，恢复为初始测试数据状态。</p>
+                </div>
+                <div class="card-body">
+                    <button class="btn btn-danger btn-block" id="resetBtn">
+                        <span>🔄</span> 重置系统数据
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <p>校园十大优秀青年评比系统 · 数据结构课程设计</p>
+        <p>基于哈希表（除留余数法 + 再哈希法）与二叉排序树实现</p>
+    </footer>
+
+    <!-- 确认对话框 -->
+    <div class="modal-overlay" id="confirmModal" style="display: none;">
+        <div class="modal">
+            <h3 class="modal-title">
+                <span class="icon">⚠️</span>
+                确认重置
+            </h3>
+            <p class="modal-desc">此操作将清空所有提名与投票数据，并恢复为初始的 10 名测试学生数据。此操作不可撤销。</p>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="cancelReset">取消</button>
+                <button class="btn btn-danger" id="confirmReset">确认重置</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 数据结构实现 ====================
+
+        const M = 19;           // 除留余数法的模
+        const HASH_LEN = 20;    // 哈希表长度
+        const MAX_PROBES = 20;  // 最大探测次数
+
+        // 默认事迹文案池
+        const DEFAULT_DEEDS = [
+            '积极参加校园公益活动，组织多次志愿服务',
+            '学习成绩优异，连续获得校级奖学金',
+            '在学科竞赛中表现突出，为校争光',
+            '担任学生会干部，组织能力出色',
+            '热心帮助同学，深受师生好评',
+            '在文艺活动中表现活跃，多才多艺',
+            '体育成绩突出，代表学校参赛获奖',
+            '科技创新能力强，有多个创新项目',
+            '社会实践经验丰富，实习表现优秀',
+            '品德优良，是同学们学习的榜样',
+        ];
+
+        // 计算姓名的 Unicode 编码之和（支持中文）
+        function computeKey(name) {
+            let sum = 0;
+            for (let i = 0; i < name.length; i++) {
+                sum += name.charCodeAt(i);
+            }
+            return sum;
+        }
+
+        // 哈希表类
+        class HashTable {
+            constructor() {
+                this.table = new Array(HASH_LEN).fill(null);
+                this.count = 0;
+            }
+
+            // 计算哈希地址
+            hashAddress(key) {
+                return key % M;
+            }
+
+            // 插入学生
+            insert(name, major, grade, vote = 0, deed) {
+                const key = computeKey(name);
+                let adr = this.hashAddress(key);
+                let si = 1;
+
+                // 先检查是否已存在同名同专业同年级学生
+                const existing = this.findInternal(name, major, grade);
+                if (existing) {
+                    return {
+                        success: false,
+                        student: existing,
+                        message: `「${name}」已存在于哈希表中（地址 ${existing.address}）`,
+                        searchLength: existing.searchLength
+                    };
+                }
+
+                // 再哈希法探测空位
+                let probeCount = 0;
+                while (this.table[adr] !== null && probeCount < MAX_PROBES) {
+                    adr = (adr + key) % M;
+                    si++;
+                    probeCount++;
+                }
+
+                if (probeCount >= MAX_PROBES || this.table[adr] !== null) {
+                    if (this.table[HASH_LEN - 1] === null) {
+                        adr = HASH_LEN - 1;
+                        si = probeCount + 1;
+                    } else {
+                        return {
+                            success: false,
+                            message: '哈希表已满，无法插入新学生',
+                            searchLength: si
+                        };
+                    }
+                }
+
+                const student = {
+                    name,
+                    major,
+                    key,
+                    grade,
+                    vote,
+                    searchLength: si,
+                    address: adr,
+                    deed: deed || DEFAULT_DEEDS[this.count % DEFAULT_DEEDS.length]
+                };
+
+                this.table[adr] = student;
+                this.count++;
+
+                return {
+                    success: true,
+                    student,
+                    message: `成功提名「${name}」！哈希地址：${adr}，查找长度：${si}`,
+                    searchLength: si
+                };
+            }
+
+            // 内部查找
+            findInternal(name, major, grade) {
+                const key = computeKey(name);
+                let adr = this.hashAddress(key);
+                let probeCount = 0;
+
+                while (probeCount < MAX_PROBES) {
+                    const entry = this.table[adr];
+                    if (entry === null) return null;
+                    if (entry.name === name && entry.major === major && entry.grade === grade) return entry;
+                    adr = (adr + key) % M;
+                    probeCount++;
+                }
+
+                const lastEntry = this.table[HASH_LEN - 1];
+                if (lastEntry && lastEntry.name === name && lastEntry.major === major && lastEntry.grade === grade) {
+                    return lastEntry;
+                }
+                return null;
+            }
+
+            // 查找学生（对外接口）
+            find(name, major, grade) {
+                const key = computeKey(name);
+                let adr = this.hashAddress(key);
+                let si = 1;
+                let probeCount = 0;
+
+                while (probeCount < MAX_PROBES) {
+                    const entry = this.table[adr];
+                    if (entry === null) {
+                        return {
+                            found: false,
+                            searchLength: si,
+                            message: `未找到「${name}」（${grade} ${major}），该同学尚未被提名`
+                        };
+                    }
+                    if (entry.name === name && entry.major === major && entry.grade === grade) {
+                        return {
+                            found: true,
+                            student: { ...entry, searchLength: si },
+                            searchLength: si,
+                            message: `找到「${name}」！当前票数：${entry.vote}，查找长度：${si}`
+                        };
+                    }
+                    adr = (adr + key) % M;
+                    si++;
+                    probeCount++;
+                }
+
+                const lastEntry = this.table[HASH_LEN - 1];
+                if (lastEntry && lastEntry.name === name && lastEntry.major === major && lastEntry.grade === grade) {
+                    return {
+                        found: true,
+                        student: { ...lastEntry, searchLength: si },
+                        searchLength: si,
+                        message: `找到「${name}」！当前票数：${lastEntry.vote}，查找长度：${si}`
+                    };
+                }
+
+                return {
+                    found: false,
+                    searchLength: si,
+                    message: `未找到「${name}」（${grade} ${major}），该同学尚未被提名`
+                };
+            }
+
+            // 投票
+            vote(name, major, grade) {
+                const existing = this.findInternal(name, major, grade);
+
+                if (existing) {
+                    existing.vote += 1;
+                    return {
+                        success: true,
+                        student: { ...existing },
+                        message: `投票成功！「${name}」当前票数：${existing.vote}`,
+                        isNew: false,
+                        searchLength: existing.searchLength
+                    };
+                }
+
+                const insertResult = this.insert(name, major, grade, 1);
+                if (insertResult.success && insertResult.student) {
+                    return {
+                        success: true,
+                        student: insertResult.student,
+                        message: `提名成功！「${name}」获得首票！`,
+                        isNew: true,
+                        searchLength: insertResult.searchLength
+                    };
+                }
+
+                return {
+                    success: false,
+                    message: insertResult.message,
+                    isNew: false,
+                    searchLength: insertResult.searchLength
+                };
+            }
+
+            // 获取所有学生
+            getAllEntries() {
+                const entries = [];
+                for (let i = 0; i < HASH_LEN; i++) {
+                    if (this.table[i] !== null) {
+                        entries.push({ ...this.table[i] });
+                    }
+                }
+                return entries;
+            }
+
+            // 获取原始哈希表
+            getRawTable() {
+                return [...this.table];
+            }
+
+            // 计算平均查找长度
+            getASL() {
+                if (this.count === 0) return 0;
+                const totalSL = this.getAllEntries().reduce((sum, s) => sum + s.searchLength, 0);
+                return Math.round((totalSL / this.count) * 100) / 100;
+            }
+
+            // 获取学生数量
+            getCount() {
+                return this.count;
+            }
+
+            // 重置
+            reset() {
+                this.table = new Array(HASH_LEN).fill(null);
+                this.count = 0;
+            }
+        }
+
+        // 二叉排序树节点
+        class BSTNode {
+            constructor(student) {
+                this.student = student;
+                this.left = null;
+                this.right = null;
+            }
+        }
+
+        // 二叉排序树类
+        class BST {
+            constructor() {
+                this.root = null;
+            }
+
+            // 插入节点
+            insert(student) {
+                const node = new BSTNode(student);
+
+                if (this.root === null) {
+                    this.root = node;
+                    return;
+                }
+
+                this.insertNode(this.root, node);
+            }
+
+            insertNode(current, newNode) {
+                if (newNode.student.vote >= current.student.vote) {
+                    if (current.right === null) {
+                        current.right = newNode;
+                    } else {
+                        this.insertNode(current.right, newNode);
+                    }
+                } else {
+                    if (current.left === null) {
+                        current.left = newNode;
+                    } else {
+                        this.insertNode(current.left, newNode);
+                    }
+                }
+            }
+
+            // 批量构建
+            buildFromStudents(students) {
+                this.root = null;
+                for (const s of students) {
+                    this.insert(s);
+                }
+            }
+
+            // 获取前N名（右-根-左中序遍历）
+            getTopN(n) {
+                const result = [];
+                this.inorderReverse(this.root, result, n);
+                return result;
+            }
+
+            inorderReverse(node, result, n) {
+                if (node === null || result.length >= n) return;
+
+                this.inorderReverse(node.right, result, n);
+
+                if (result.length < n) {
+                    result.push(node.student);
+                }
+
+                this.inorderReverse(node.left, result, n);
+            }
+
+            clear() {
+                this.root = null;
+            }
+        }
+
+        // ==================== 初始数据 ====================
+
+        const INITIAL_STUDENTS = [
+            { name: '张明', major: '软件工程', grade: '2023级', vote: 14 },
+            { name: '王芳', major: '数据科学与大数据技术', grade: '2023级', vote: 12 },
+            { name: '李华', major: '计算机科学与技术', grade: '2024级', vote: 12 },
+            { name: '刘伟', major: '人工智能', grade: '2022级', vote: 10 },
+            { name: '杨帆', major: '网络工程', grade: '2023级', vote: 9 },
+            { name: '陈静', major: '软件工程', grade: '2024级', vote: 9 },
+            { name: '赵磊', major: '数字媒体技术', grade: '2024级', vote: 6 },
+            { name: '周婷', major: '计算机科学与技术', grade: '2022级', vote: 4 },
+            { name: '吴强', major: '人工智能', grade: '2024级', vote: 3 },
+            { name: '郑雪', major: '软件工程', grade: '2022级', vote: 2 },
+        ];
+
+        function createInitialHashTable() {
+            const ht = new HashTable();
+            for (const s of INITIAL_STUDENTS) {
+                ht.insert(s.name, s.major, s.grade, s.vote);
+            }
+            return ht;
+        }
+
+        // ==================== 全局状态 ====================
+
+        let hashTable = createInitialHashTable();
+
+        // ==================== UI 更新函数 ====================
+
+        function updateTableView() {
+            const entries = hashTable.getAllEntries();
+            const tbody = document.getElementById('tableBody');
+            
+            if (entries.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="empty-state">
+                            <div class="icon">📭</div>
+                            暂无提名学生数据
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tbody.innerHTML = entries.map((s, i) => `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td style="font-weight: 500;">${s.name}</td>
+                        <td><span class="major-tag">${s.major}</span></td>
+                        <td><span class="badge badge-outline">${s.grade}</span></td>
+                        <td><span class="vote-count">${s.vote}</span></td>
+                        <td style="color: var(--text-muted);">${s.key}</td>
+                        <td style="color: var(--text-muted);">${s.address}</td>
+                        <td style="color: var(--text-muted);">${s.searchLength}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // 更新ASL
+            document.getElementById('aslValue').textContent = hashTable.getASL();
+            document.getElementById('studentCount').textContent = hashTable.getCount();
+
+            // 更新哈希表可视化
+            updateHashGridView();
+        }
+
+        function updateHashGridView() {
+            const rawTable = hashTable.getRawTable();
+            const grid = document.getElementById('hashGrid');
+            
+            grid.innerHTML = rawTable.map((slot, idx) => `
+                <div class="hash-cell ${slot ? 'filled' : 'empty'}">
+                    <div class="hash-addr">[${idx}]</div>
+                    ${slot ? `
+                        <div class="hash-name">${slot.name}</div>
+                        <div class="hash-major">${slot.major}</div>
+                        <div class="hash-vote">${slot.vote}票</div>
+                    ` : `
+                        <div class="hash-empty-text">空</div>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        function updateLeaderboardView() {
+            const allEntries = hashTable.getAllEntries();
+            const bst = new BST();
+            bst.buildFromStudents(allEntries);
+            const leaderboard = bst.getTopN(10);
+
+            const container = document.getElementById('leaderboard');
+
+            if (leaderboard.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">🏆</div>
+                        <p>暂无排行数据，请先提名学生</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const medals = ['🥇', '🥈', '🥉'];
+
+            container.innerHTML = leaderboard.map((student, idx) => {
+                const rankClass = idx < 3 ? `rank-${idx + 1}` : '';
+                const rankBadge = idx < 3
+                    ? `<span class="rank-medal">${medals[idx]}</span>`
+                    : `<div class="rank-number">${idx + 1}</div>`;
+                const crown = idx === 0 ? '<span class="crown-icon">👑</span>' : '';
+
+                return `
+                    <div class="rank-item ${rankClass}">
+                        <div class="rank-badge">${rankBadge}</div>
+                        <div class="rank-info">
+                            <div class="rank-name">
+                                ${student.name}${crown}
+                            </div>
+                            <div class="rank-detail">
+                                <span class="major-tag">${student.major}</span>
+                                <span class="badge badge-outline">${student.grade}</span>
+                                <span class="rank-deed">${student.deed.length > 20 ? student.deed.slice(0, 20) + '...' : student.deed}</span>
+                            </div>
+                        </div>
+                        <div class="rank-votes">
+                            <div class="rank-vote-num">${student.vote}</div>
+                            <div class="rank-vote-label">票</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==================== Toast 提示 ====================
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icon = type === 'success' ? '✅' : '❌';
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <span>${message}</span>
+            `;
+            
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'toastIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+
+        // ==================== 事件处理 ====================
+
+        // 导航切换
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const section = btn.dataset.section;
+                
+                // 更新按钮状态
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                // 切换section
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(`section-${section}`).classList.add('active');
+
+                // 关闭移动端菜单
+                document.getElementById('nav').classList.remove('open');
+
+                // 如果是票数总览或排行榜，刷新数据
+                if (section === 'table') {
+                    updateTableView();
+                } else if (section === 'leaderboard') {
+                    updateLeaderboardView();
+                }
+
+                // 滚动到顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+
+        // 移动端菜单
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            document.getElementById('nav').classList.toggle('open');
+        });
+
+        // 投票表单
+        document.getElementById('voteForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('voteName').value.trim();
+            const major = document.getElementById('voteMajor').value;
+            const grade = document.getElementById('voteGrade').value;
+
+            if (!name || !major || !grade) return;
+
+            const result = hashTable.vote(name, major, grade);
+            const resultDiv = document.getElementById('voteResult');
+
+            if (result.success) {
+                resultDiv.innerHTML = `
+                    <div class="result-box result-success">
+                        <div class="result-title">
+                            <span>✅</span>
+                            ${result.message}
+                        </div>
+                        ${result.student ? `
+                            <div class="result-info">
+                                <span class="badge">专业：${result.student.major}</span>
+                                <span class="badge">年级：${result.student.grade}</span>
+                                <span class="badge">票数：${result.student.vote}</span>
+                                <span class="badge">地址：${result.student.address}</span>
+                                <span class="badge">查找长度：${result.searchLength}</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+                showToast(result.isNew ? `成功提名「${name}」！` : `投票成功！「${name}」当前 ${result.student.vote} 票`);
+                
+                // 清空输入
+                document.getElementById('voteName').value = '';
+                document.getElementById('voteMajor').value = '';
+                document.getElementById('voteGrade').value = '';
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="result-box result-error">
+                        <div class="result-title">
+                            <span>❌</span>
+                            ${result.message}
+                        </div>
+                    </div>
+                `;
+                showToast(result.message, 'error');
+            }
+        });
+
+        // 查询表单
+        document.getElementById('queryForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('queryName').value.trim();
+            const major = document.getElementById('queryMajor').value;
+            const grade = document.getElementById('queryGrade').value;
+
+            if (!name || !major || !grade) return;
+
+            const result = hashTable.find(name, major, grade);
+            const resultDiv = document.getElementById('queryResult');
+
+            if (result.found && result.student) {
+                resultDiv.innerHTML = `
+                    <div class="result-box result-success">
+                        <div class="result-title">
+                            <span>✅</span>
+                            查询成功
+                        </div>
+                        <div class="student-info">
+                            <div class="info-item">
+                                <span class="icon">👤</span>
+                                <span>姓名：${result.student.name}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="icon">📚</span>
+                                <span>专业：${result.student.major}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="icon">🎓</span>
+                                <span>年级：${result.student.grade}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="icon">🗳️</span>
+                                <span>票数：${result.student.vote}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="icon">#️⃣</span>
+                                <span>关键字：${result.student.key}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="icon">📍</span>
+                                <span>哈希地址：${result.student.address}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="icon">📏</span>
+                                <span>查找长度：${result.searchLength}</span>
+                            </div>
+                            <div class="deed-item">
+                                <span class="icon">📝</span>
+                                <span>突出事迹：${result.student.deed}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                showToast(`找到「${name}」，当前 ${result.student.vote} 票`);
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="result-box result-error">
+                        <div class="result-title">
+                            <span>❌</span>
+                            ${result.message}
+                        </div>
+                    </div>
+                `;
+                showToast(result.message, 'error');
+            }
+        });
+
+        // 重置按钮
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            document.getElementById('confirmModal').style.display = 'flex';
+        });
+
+        document.getElementById('cancelReset').addEventListener('click', () => {
+            document.getElementById('confirmModal').style.display = 'none';
+        });
+
+        document.getElementById('confirmReset').addEventListener('click', () => {
+            hashTable = createInitialHashTable();
+            document.getElementById('confirmModal').style.display = 'none';
+            showToast('系统已重置，恢复初始数据');
+            
+            // 清空结果显示
+            document.getElementById('voteResult').innerHTML = '';
+            document.getElementById('queryResult').innerHTML = '';
+        });
+
+        // 点击遮罩关闭对话框
+        document.getElementById('confirmModal').addEventListener('click', (e) => {
+            if (e.target.id === 'confirmModal') {
+                document.getElementById('confirmModal').style.display = 'none';
+            }
+        });
+
+        // ==================== 初始化 ====================
+
+        // 初始加载时更新票数总览数据
+        updateTableView();
+        updateLeaderboardView();
+    </script>
+</body>
+</html>
